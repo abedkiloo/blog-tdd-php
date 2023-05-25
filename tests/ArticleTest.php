@@ -6,6 +6,16 @@ class ArticleTest extends TestCase
 {
     protected $article;
 
+
+    static function titleProvider()
+    {
+        return [
+            "Slug has Space Removed" => ["An example article", "An_example_article"],
+            "White space remove" => [" An example article ", "An_example_article"],
+            "Unwanted Characters" => ["Read! This! Now!", "Read_This_Now"]
+        ];
+    }
+
     public function testTitleIsEmptyByDefault()
     {
         $this->assertEmpty($this->article->title);
@@ -29,10 +39,16 @@ class ArticleTest extends TestCase
 
     }
 
-    public function testSlugDoesNotHaveAnyNoneWordCharacters()
+    /**
+     * @dataProvider titleProvider
+     * @param $title
+     * @param $slug
+     * @return void
+     */
+    public function testSlugDoesNotHaveAnyNoneWordCharacters($title, $slug)
     {
-        $this->article->title = "Read! This! Now!";
-        $this->assertEquals($this->article->getSlug(), 'Read_This_Now');
+        $this->article->title = $title;
+        $this->assertEquals($this->article->getSlug(), $slug);
     }
 
     protected function setUp(): void
